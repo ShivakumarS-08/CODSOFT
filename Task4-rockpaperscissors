@@ -1,0 +1,76 @@
+import random
+
+# Function to get the user's input choice
+def get_user_pick():
+    print("\nPick one: rock, paper, or scissors")
+    user_input = input("Your move: ").strip().lower()
+    
+    while user_input not in ['rock', 'paper', 'scissors']:
+        print("Hmm... that's not valid. Try typing rock, paper, or scissors exactly.")
+        user_input = input("Your move: ").strip().lower()
+    
+    return user_input
+
+# Randomly lets computer pick a move
+def computer_throw():
+    options = ['rock', 'paper', 'scissors']
+    pick = random.choice(options)
+    return pick  # could've inlined this but leaving it for clarity
+
+# Basic winner checking logic
+def figure_out_winner(player_choice, cpu_choice):
+    if player_choice == cpu_choice:
+        return "tie"  # both went for the same thing
+    elif (player_choice == 'rock' and cpu_choice == 'scissors') or \
+         (player_choice == 'scissors' and cpu_choice == 'paper') or \
+         (player_choice == 'paper' and cpu_choice == 'rock'):
+        return "player"
+    else:
+        return "cpu"
+
+# Prints who won and what each played
+def show_result(me, bot, outcome):
+    print("\nYou played:", me)
+    print("Computer played:", bot)
+    
+    if outcome == "tie":
+        print("It's a draw — no winner this time.")
+    elif outcome == "player":
+        print("Nice! You beat the computer.")
+    else:
+        print("Computer takes this round. Try again!")
+
+# Runs the game loop
+def run_rps_game():
+    my_score = 0
+    bot_score = 0
+    round_id = 1
+    
+    while True:
+        print(f"\n=== ROUND {round_id} ===")
+        
+        my_choice = get_user_pick()
+        bot_choice = computer_throw()
+        
+        winner = figure_out_winner(my_choice, bot_choice)
+        show_result(my_choice, bot_choice, winner)
+
+        if winner == "player":
+            my_score += 1
+        elif winner == "cpu":
+            bot_score += 1
+        # No score change on tie
+
+        print(f"Scoreboard => You: {my_score} | Computer: {bot_score}")
+        
+        cont = input("\nWanna go another round? (yes/no): ").strip().lower()
+        if cont != "yes":
+            print("\nAlrighty — thanks for playing!")
+            break
+        
+        round_id += 1
+
+# Make sure this is only called when running directly
+if __name__ == "__main__":  # fixed the typo from _name_ to __name__
+    print("Hey there! Welcome to a good old game of Rock-Paper-Scissors!")
+    run_rps_game()
