@@ -1,0 +1,116 @@
+def add_new_contact(book):
+    print("\n-- Add New Contact --")
+    full_name = input("Name: ").strip().title()
+    phone_number = input("Phone Number: ").strip()
+    email_address = input("Email: ").strip()
+    home_address = input("Address: ").strip()
+
+    book[full_name] = {
+        "phone": phone_number,
+        "email": email_address,
+        "address": home_address
+    }
+
+    print(f"Contact '{full_name}' added successfully!\n")
+
+
+def display_all_contacts(phonebook):
+    if not phonebook:
+        print("\nNo contacts found.\n")
+        return
+    
+    print("\n-- Contact List --")
+    for contact_name, info in phonebook.items():
+        print(f"{contact_name}: {info['phone']}")
+    print()
+
+
+def find_contact(book):
+    print("\n-- Search Contact --")
+    query = input("Enter name or phone number to search: ").strip().lower()
+
+    matches = {}
+    for person, details in book.items():
+        if query in person.lower() or query in details['phone']:
+            matches[person] = details
+    
+    if matches:
+        for found_name, info in matches.items():
+            print(f"\nName: {found_name}")
+            print(f"Phone: {info['phone']}")
+            print(f"Email: {info['email']}")
+            print(f"Address: {info['address']}")
+        print()
+    else:
+        print("\nNo matching contacts found.\n")
+
+
+def modify_contact(book):
+    print("\n-- Update Contact --")
+    person_to_update = input("Enter the name of the contact to update: ").strip().title()
+
+    if person_to_update not in book:
+        print(f"Contact '{person_to_update}' not found.\n")
+        return
+
+    current = book[person_to_update]
+    new_phone = input(f"New phone ({current['phone']}): ").strip()
+    new_email = input(f"New email ({current['email']}): ").strip()
+    new_address = input(f"New address ({current['address']}): ").strip()
+
+    updated_info = {
+        "phone": new_phone if new_phone else current['phone'],
+        "email": new_email if new_email else current['email'],
+        "address": new_address if new_address else current['address']
+    }
+
+    book[person_to_update] = updated_info
+    print(f"Contact '{person_to_update}' updated successfully!\n")
+
+
+def remove_contact(book):
+    print("\n-- Delete Contact --")
+    name_to_remove = input("Enter the name of the contact to delete: ").strip().title()
+
+    if name_to_remove in book:
+        del book[name_to_remove]
+        print(f"Contact '{name_to_remove}' deleted successfully!\n")
+    else:
+        print(f"Contact '{name_to_remove}' not found.\n")
+
+
+def main():
+    contacts_db = {}
+
+    while True:
+        print(
+            "\n=== Contact Book ===\n"
+            "1. Add Contact\n"
+            "2. View Contact List\n"
+            "3. Search Contact\n"
+            "4. Update Contact\n"
+            "5. Delete Contact\n"
+            "6. Exit\n"
+        )
+
+        user_input = input("Choose an option (1-6): ").strip()
+
+        if user_input == "1":
+            add_new_contact(contacts_db)
+        elif user_input == "2":
+            display_all_contacts(contacts_db)
+        elif user_input == "3":
+            find_contact(contacts_db)
+        elif user_input == "4":
+            modify_contact(contacts_db)
+        elif user_input == "5":
+            remove_contact(contacts_db)
+        elif user_input == "6":
+            print("\nExiting Contact Book. Goodbye!")
+            break
+        else:
+            print("Invalid choice. Please try again.\n")
+
+
+if __name__ == "__main__":
+    main()
