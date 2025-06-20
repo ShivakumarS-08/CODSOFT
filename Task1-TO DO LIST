@@ -1,0 +1,102 @@
+import os
+
+TODO_FILENAME = "todo_list.txt"
+
+def load_task_list():
+    if not os.path.isfile(TODO_FILENAME):
+        return []
+
+    with open(TODO_FILENAME, "r") as f:
+        lines = f.readlines()
+        task_list = []
+        for line in lines:
+            cleaned = line.strip()
+            if cleaned:
+                task_list.append(cleaned)
+        return task_list
+
+def save_task_list(task_list):
+    with open(TODO_FILENAME, "w") as f:
+        for t in task_list:
+            f.write(t + "\n")
+
+def show_all_tasks(task_list):
+    print("\n--- Your Tasks ---")
+    if not task_list:
+        print("No tasks here yet.")
+        return
+
+    for idx, t in enumerate(task_list):
+        print(f"{idx + 1}. {t}")
+
+def add_new_task(task_list):
+    new_task = input("What's the task? ").strip()
+    if new_task:
+        task_list.append(new_task)
+        print("Task added.")
+    else:
+        print("Empty input. Skipping.")
+
+def remove_task(task_list):
+    show_all_tasks(task_list)
+
+    try:
+        to_remove = int(input("Task number to delete: ").strip())
+        idx = to_remove - 1
+        if 0 <= idx < len(task_list):
+            gone = task_list.pop(idx)
+            print(f"Removed task: '{gone}'")
+        else:
+            print("Invalid task number.")
+    except ValueError:
+        print("Not a valid number.")
+
+def modify_task(task_list):
+    show_all_tasks(task_list)
+
+    try:
+        to_edit = int(input("Which task number to update? ").strip())
+        idx = to_edit - 1
+        if 0 <= idx < len(task_list):
+            updated = input("New task text: ").strip()
+            if updated:
+                original = task_list[idx]
+                task_list[idx] = updated
+                print(f"Changed '{original}' to '{updated}'")
+            else:
+                print("Empty input. Nothing changed.")
+        else:
+            print("Invalid task number.")
+    except ValueError:
+        print("Expected a number.")
+
+def run_menu():
+    all_tasks = load_task_list()
+
+    while True:
+        print("\n===== TO-DO LIST MENU =====")
+        print("1) Show Tasks")
+        print("2) Add Task")
+        print("3) Edit Task")
+        print("4) Delete Task")
+        print("5) Save & Exit")
+
+        choice = input("Pick an option [1-5]: ").strip()
+
+        if choice == "1":
+            show_all_tasks(all_tasks)
+        elif choice == "2":
+            add_new_task(all_tasks)
+        elif choice == "3":
+            modify_task(all_tasks)
+        elif choice == "4":
+            remove_task(all_tasks)
+        elif choice == "5":
+            save_task_list(all_tasks)
+            print("Tasks saved. Bye.")
+            break
+        else:
+            print("Invalid input. Choose 1–5.")
+
+if __name__ == "__main__":
+    run_menu()
